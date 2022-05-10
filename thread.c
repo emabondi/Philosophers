@@ -24,6 +24,7 @@ void	*monitoring(void *r)
 		//printf("\nms_ultima_mangiata%llu, time_death:%d\n", (((get_time() - rules->start_time) - rules->philo[i].last_meal)), (uint16_t)rules->time_death);
 		if (get_time() - (rules->start_time + rules->philo[i].last_meal) >= (uint16_t)rules->time_death)
 		{
+			printf("\ntime:%llu, start_time:%llu, last_meal:%llu\n", get_time(), rules->start_time, rules->philo[i].last_meal);
 			rules->finish = 1;
 			print_msg(rules->start_time, rules->philo[i].id, &rules->write, "died");
 			exit (0);
