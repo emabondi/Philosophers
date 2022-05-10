@@ -41,6 +41,7 @@ typedef struct s_rules
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	write;
 	uint16_t		start_time;
+	pthread_t		monitoring_thread;
 	t_philo			*philo;
 }				t_rules;
 

@@ -45,7 +45,7 @@ void	ft_init(t_rules *rules, char *argv[])
 	i = 0;
 	while (i < rules->n_ph)
 	{
-		rules->philo[i].last_meal = rules->start_timel;
+		rules->philo[i].last_meal = 0;
 		rules->philo[i].rules = rules;
 		rules->philo[i].id = i + 1;
 		rules->philo[i].n_eat = 0;

@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 NAME = philo
-SRCS = main.c utility.c thread.c
+SRCS = main.c utility.c thread.c message.c
 FLAG = -Wall -Werror -Wextra -pthread
 
 $(NAME):

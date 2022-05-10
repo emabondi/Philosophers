@@ -12,11 +12,37 @@
 
 #include "philo.h"
 
-void	wait(uint16_t wait_time)
+void	*monitoring(void *r)
 {
-	u_int16_t	start_time
-	usleep(wait_time * 1000)
-	while ()
+	int		i;
+	t_rules	*rules;
+
+	rules = r;
+	i = 0;
+	while(rules->finish == 0)
+	{
+		//printf("\nms_ultima_mangiata%llu, time_death:%d\n", (((get_time() - rules->start_time) - rules->philo[i].last_meal)), (uint16_t)rules->time_death);
+		if (get_time() - (rules->start_time + rules->philo[i].last_meal) >= (uint16_t)rules->time_death)
+		{
+			rules->finish = 1;
+			print_msg(rules->start_time, rules->philo[i].id, &rules->write, "died");
+			exit (0);
+		}
+		i++;
+		if (i == rules->n_ph)
+			i = 0;
+	}
+	return (0);
+}
+
+void	ft_wait(uint16_t wait_time)
+{
+	u_int16_t	start_time;
+
+	start_time = get_time();
+	usleep(wait_time * 1000 - 20000);
+	while (get_time() < start_time + wait_time)
+		continue ;
 }
 
 void	take_forks(t_philo *philo)
@@ -38,7 +64,13 @@ void	*ft_thread(void *philo)
 	{
 		take_forks(ph);
 		print_msg(ph->rules->start_time, ph->id, &ph->rules->write, "is eating");
-		wait(ph->rules->time_eat)
+		ph->last_meal = get_time() - ph->rules->start_time;
+		ft_wait(ph->rules->time_eat);
+		pthread_mutex_unlock(ph->left);
+		pthread_mutex_unlock(ph->right);
+		print_msg(ph->rules->start_time, ph->id, &ph->rules->write, "is sleeping");
+		ft_wait(ph->rules->time_sleep);
+		print_msg(ph->rules->start_time, ph->id, &ph->rules->write, "is thinking");
 	}
 	return (philo);
 }
@@ -49,6 +81,7 @@ void	ft_threadmaker(t_rules *rules)
 	t_philo	*philo;
 
 	philo = rules->philo;
+	pthread_create(&rules->monitoring_thread, NULL, monitoring, rules);
 	i = 0;
 	while (i < rules->n_ph)
 	{
