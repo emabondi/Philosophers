@@ -35,14 +35,19 @@ void	ft_init(t_rules *rules, char *argv[])
 	rules->time_death = ft_atoi(argv[2]);
 	rules->time_eat = ft_atoi(argv[3]);
 	rules->time_sleep = ft_atoi(argv[4]);
+	rules->finish = 0;
 	if (rules->n_ph < 2)
 		ft_error("Arg");
 	ft_init_forks(rules);
+	pthread_mutex_init(&rules->write, NULL);
+	rules->start_time = get_time();
 	rules->philo = (t_philo *) malloc (sizeof(t_philo) * rules->n_ph);
+	i = 0;
 	while (i < rules->n_ph)
 	{
+		rules->philo[i].last_meal = rules->start_timel;
 		rules->philo[i].rules = rules;
-		rules->philo[i].id = i;
+		rules->philo[i].id = i + 1;
 		rules->philo[i].n_eat = 0;
 		rules->philo[i].rules = rules;
 		rules->philo[i].left = &rules->forks[i];
@@ -54,7 +59,7 @@ void	ft_init(t_rules *rules, char *argv[])
 	}
 }
 
-int		main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
 	t_rules	rules;
 
@@ -66,5 +71,4 @@ int		main(int argc, char *argv[])
 	else
 		rules.nb_must_eat = -1;
 	ft_threadmaker(&rules);
-	sleep(5);
 }
