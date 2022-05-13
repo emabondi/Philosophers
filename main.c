@@ -35,7 +35,7 @@ void	ft_init(t_rules *rules, char *argv[])
 	rules->time_death = ft_atoi(argv[2]);
 	rules->time_eat = ft_atoi(argv[3]);
 	rules->time_sleep = ft_atoi(argv[4]);
-	rules->finish = 0;
+	rules->philo_finish = 0;
 	if (rules->n_ph < 2)
 		ft_error("Arg");
 	ft_init_forks(rules);

@@ -18,27 +18,30 @@ void	*monitoring(void *r)
 	t_rules	*rules;
 
 	rules = r;
-	i = 0;
-	while(rules->finish == 0)
+	while(1)
 	{
-		//printf("\nms_ultima_mangiata%llu, time_death:%d\n", (((get_time() - rules->start_time) - rules->philo[i].last_meal)), (uint16_t)rules->time_death);
-		if (get_time() - (rules->start_time + rules->philo[i].last_meal) >= (uint16_t)rules->time_death)
+		i = 0;
+		while (i < rules->n_ph)
 		{
-			printf("\ntime:%llu, start_time:%llu, last_meal:%llu\n", get_time(), rules->start_time, rules->philo[i].last_meal);
-			rules->finish = 1;
-			print_msg(rules->start_time, rules->philo[i].id, &rules->write, "died");
-			exit (0);
+			if (rules->philo_finish == rules->n_ph)
+				exit (0);
+			else if (get_time() - (rules->start_time + rules->philo[i].last_meal) >= (uint64_t)rules->time_death)
+			{
+				//printf("\ntime:%llu, start_time:%llu, last_meal:%llu\n", get_time(), rules->start_time, rules->philo[i].last_meal);
+				//printf("philo1last_eat:%llu, philo2last_eat:%llu, philo3last_eat:%llu", rules->philo[0].last_meal, rules->philo[1].last_meal, rules->philo[2].last_meal);
+				pthread_mutex_lock(&rules->write);
+				printf ("%llu %d %s\n",  get_time() - rules->start_time, rules->philo[i].id, "died");
+				exit (0) ;
+			}
+			i++;
 		}
-		i++;
-		if (i == rules->n_ph)
-			i = 0;
 	}
 	return (0);
 }
 
-void	ft_wait(uint16_t wait_time)
+void	ft_wait(uint64_t wait_time)
 {
-	u_int16_t	start_time;
+	u_int64_t	start_time;
 
 	start_time = get_time();
 	usleep(wait_time * 1000 - 20000);
@@ -60,12 +63,15 @@ void	*ft_thread(void *philo)
 
 	ph = philo;
 	if (ph->id % 2 == 0)
-		usleep(ph->rules->time_eat * 1000); 
-	while (ph->rules->finish == 0)
+		usleep(ph->rules->time_eat * 100);
+	while (1)
 	{
 		take_forks(ph);
 		print_msg(ph->rules->start_time, ph->id, &ph->rules->write, "is eating");
 		ph->last_meal = get_time() - ph->rules->start_time;
+		ph->n_eat++;
+		if (ph->n_eat == ph->rules->nb_must_eat)
+			ph->rules->philo_finish++;
 		ft_wait(ph->rules->time_eat);
 		pthread_mutex_unlock(ph->left);
 		pthread_mutex_unlock(ph->right);

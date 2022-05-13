@@ -6,7 +6,7 @@
 /*   By: ebondi <ebondi@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 23:31:21 by ebondi            #+#    #+#             */
-/*   Updated: 2022/05/10 22:22:32 by ebondi           ###   ########.fr       */
+/*   Updated: 2022/05/12 14:56:45 by ebondi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ uint64_t	get_time(void)
 	struct timeval timeval;
 
 	gettimeofday(&timeval, NULL);
-	return ((timeval.tv_sec * (uint16_t)1000) + (timeval.tv_usec / (uint16_t)1000));
+	return ((timeval.tv_sec * (uint64_t)1000) + (timeval.tv_usec / 1000));
 }
 
 void	print_msg(uint64_t start_time, int id, pthread_mutex_t	*write, char *str)

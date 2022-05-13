@@ -37,7 +37,7 @@ typedef struct s_rules
 	int				time_eat;
 	int				time_sleep;
 	int				nb_must_eat;
-	int				finish;
+	int				philo_finish;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	write;
 	uint64_t		start_time;
@@ -52,4 +52,5 @@ int			ft_atoi(const char *str);
 void		ft_threadmaker(t_rules *rules);
 void		print_msg(uint64_t start_time, int id, pthread_mutex_t	*write, char *str);
 uint64_t	get_time(void);
+
 #endif
