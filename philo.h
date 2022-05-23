@@ -23,24 +23,25 @@ typedef struct s_philo
 {
 	int				id;
 	int				n_eat;
+	int				philo_finish;
 	pthread_mutex_t	*left;
 	pthread_mutex_t	*right;
 	pthread_t		thread;
-	uint64_t		last_meal;
+	long long		last_meal;
 	struct s_rules	*rules;
 }				t_philo;
 
 typedef struct s_rules
 {
 	int				n_ph;
-	int				time_death;
+	int				finish;
+	long long		time_death;
 	int				time_eat;
 	int				time_sleep;
 	int				nb_must_eat;
-	int				philo_finish;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	write;
-	uint64_t		start_time;
+	long long		start_time;
 	pthread_t		monitoring_thread;
 	t_philo			*philo;
 }				t_rules;
@@ -50,7 +51,7 @@ void		ft_putstr(char *str);
 int			ft_isnumeric(int argc, char *argv[]);
 int			ft_atoi(const char *str);
 void		ft_threadmaker(t_rules *rules);
-void		print_msg(uint64_t start_time, int id, pthread_mutex_t	*write, char *str);
-uint64_t	get_time(void);
+void		print_msg(t_philo *ph, char *str);
+long long	get_time(void);
 
 #endif

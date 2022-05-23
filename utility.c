@@ -54,7 +54,6 @@ void	ft_error(char *str)
 {
 	ft_putstr(str);
 	ft_putstr(" error\n");
-	exit(1);
 }
 
 int	ft_atoi(const char *str)

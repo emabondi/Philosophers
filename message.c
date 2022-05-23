@@ -6,23 +6,24 @@
 /*   By: ebondi <ebondi@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 23:31:21 by ebondi            #+#    #+#             */
-/*   Updated: 2022/05/12 14:56:45 by ebondi           ###   ########.fr       */
+/*   Updated: 2022/05/24 00:52:12 by ebondi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-uint64_t	get_time(void)
+long long	get_time(void)
 {
 	struct timeval timeval;
 
 	gettimeofday(&timeval, NULL);
-	return ((timeval.tv_sec * (uint64_t)1000) + (timeval.tv_usec / 1000));
+	return ((timeval.tv_sec * 1000) + (timeval.tv_usec / 1000));
 }
 
-void	print_msg(uint64_t start_time, int id, pthread_mutex_t	*write, char *str)
+void	print_msg(t_philo *ph, char *str)
 {
-	pthread_mutex_lock(write);
-	printf ("%llu %d %s\n",  get_time() - start_time, id, str);
-	pthread_mutex_unlock(write);
+	pthread_mutex_lock(&ph->rules->write);
+	if (ph->rules->finish == 0)
+		printf ("%llu %d %s\n",  get_time() - ph->rules->start_time, ph->id, str);
+	pthread_mutex_unlock(&ph->rules->write);
 }
