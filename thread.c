@@ -12,38 +12,65 @@
 
 #include "philo.h"
 
-void	*monitoring(void *r)
-{
-	int		i;
-	int		count;
-	t_rules	*rules;
-	long long	temp;
+//void	*monitoring(void *r)
+//{
+//	int		i;
+//	int		count;
+//	t_rules	*rules;
+//	long long	temp;
 
-	rules = r;
-	while(1)
+//	rules = r;
+//	while(1)
+//	{
+//		i = 0;
+//		count = 0;
+//		temp = get_time() - rules->start_time;
+//		while (i < rules->n_ph)
+//		{
+//			pthread_mutex_lock(&rules->philo[i].philo_lock);
+//			if (temp - rules->philo[i].last_meal > rules->time_death)
+//			{
+//				print_msg(&rules->philo[i], "died");
+//				rules->finish = 1;
+//				return (0);
+//			}
+//			if (rules->philo[i].philo_finish == 1)
+//				count++;
+//			pthread_mutex_unlock(&rules->philo[i].philo_lock);
+//			i++;
+//		}
+//		if (count == rules->n_ph)
+//		{
+//			rules->finish = 1;
+//			break ;
+//		}
+//	}
+//	return (0);
+//}
+
+void	ft_monitor(t_rules *rules)
+{
+	int 		i;
+	long long	temp;
+	t_philo		*ph;
+
+	ph = rules->philo;
+	while (1)
 	{
 		i = 0;
-		count = 0;
-		temp = get_time() - rules->start_time;
 		while (i < rules->n_ph)
 		{
-			if (temp - rules->philo[i].last_meal > rules->time_death)
+			pthread_mutex_lock(&rules->time);
+			temp = get_time() - rules->start_time - ph[i].last_meal;
+			pthread_mutex_unlock(&rules->time);
+			if (temp > rules->time_death)
 			{
-				print_msg(&rules->philo[i], "died");
-				rules->finish = 1;
-				return (0);
+				print_msg(&ph[i], "died");
+				exit(0);
 			}
-			if (rules->philo[i].philo_finish == 1)
-				count++;
 			i++;
 		}
-		if (count == rules->n_ph)
-		{
-			rules->finish = 1;
-			break ;
-		}
 	}
-	return (0);
 }
 
 void	ft_wait(long long wait_time)
@@ -69,15 +96,15 @@ void	*ft_thread(void *philo)
 	t_philo *ph;
 
 	ph = philo;
+	pthread_mutex_lock(&ph->rules->time);
 	ph->last_meal = get_time() - ph->rules->start_time;
+	pthread_mutex_unlock(&ph->rules->time);
 	if (ph->id % 2 == 0)
 		ft_wait(ph->rules->time_eat);
-	while (ph->rules->finish == 0)
+	while (1)
 	{
 		pthread_mutex_lock(ph->left);
 		print_msg(ph, "has taken a fork");
-		if (ph->rules->n_ph == 1)
-			break ;
 		pthread_mutex_lock(ph->right);
 		print_msg(ph, "has taken a fork");
 		//take_forks(ph);
@@ -85,12 +112,12 @@ void	*ft_thread(void *philo)
 		ph->n_eat++;
 		if (ph->n_eat == ph->rules->nb_must_eat)
 			ph->philo_finish = 1;
+		pthread_mutex_lock(&ph->rules->time);
 		ph->last_meal = get_time() - ph->rules->start_time;
+		pthread_mutex_unlock(&ph->rules->time);
 		ft_wait(ph->rules->time_eat);
 		pthread_mutex_unlock(ph->right);
 		pthread_mutex_unlock(ph->left);
-		if (ph->rules->finish == 1)
-			break ;
 		print_msg(ph, "is sleeping");
 		ft_wait(ph->rules->time_sleep);
 		print_msg(ph, "is thinking");
@@ -104,7 +131,6 @@ void	ft_exit(t_rules *rules)
 	t_philo	*philo;
 
 	philo = rules->philo;
-	pthread_join(rules->monitoring_thread, NULL);
 	i = 0;
 	while (i < rules->n_ph)
 	{
@@ -129,12 +155,12 @@ void	ft_threadmaker(t_rules *rules)
 
 	philo = rules->philo;
 	rules->start_time = get_time();
-	pthread_create(&rules->monitoring_thread, NULL, monitoring, rules);
 	i = 0;
 	while (i < rules->n_ph)
 	{
 		pthread_create(&philo[i].thread, NULL, ft_thread, &philo[i]);
 		i++;
 	}
+	ft_monitor(rules);
 	ft_exit(rules);
 }

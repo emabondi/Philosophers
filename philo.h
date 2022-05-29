@@ -41,8 +41,8 @@ typedef struct s_rules
 	int				nb_must_eat;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	write;
+	pthread_mutex_t	time;
 	long long		start_time;
-	pthread_t		monitoring_thread;
 	t_philo			*philo;
 }				t_rules;
 

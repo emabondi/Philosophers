@@ -12,7 +12,7 @@
 
 NAME = philo
 SRCS = main.c utility.c thread.c message.c
-FLAG = -Wall -Werror -Wextra -pthread
+FLAG = -Wall -Werror -Wextra -pthread #-fsanitize=thread -g3
 
 $(NAME):
 		gcc $(FLAG) $(SRCS) -o $(NAME)

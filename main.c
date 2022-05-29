@@ -38,6 +38,7 @@ void	ft_init(t_rules *rules, char *argv[])
 	rules->finish = 0;
 	ft_init_forks(rules);
 	pthread_mutex_init(&rules->write, NULL);
+	pthread_mutex_init(&rules->time, NULL);
 	rules->philo = (t_philo *) malloc (sizeof(t_philo) * rules->n_ph);
 	i = 0;
 	while (i < rules->n_ph)
@@ -67,11 +68,7 @@ int	main(int argc, char *argv[])
 		return (0);
 	}
 	ft_init(&rules, argv);
-	//if (rules.n_ph == 1)
-	//{
-	//	printf ("")
-	//	return (0);
-	//}
+
 	if (argc == 6)
 		rules.nb_must_eat = ft_atoi(argv[5]);
 	else
