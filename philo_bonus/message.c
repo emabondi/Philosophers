@@ -6,11 +6,11 @@
 /*   By: ebondi <ebondi@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 23:31:21 by ebondi            #+#    #+#             */
-/*   Updated: 2022/05/31 20:30:09 by ebondi           ###   ########.fr       */
+/*   Updated: 2022/06/01 16:04:42 by ebondi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 long long	get_time(void)
 {
@@ -22,10 +22,5 @@ long long	get_time(void)
 
 void	print_msg(t_philo *ph, char *str)
 {
-	if (check_mutex(0, ph))
-	{
-		pthread_mutex_lock(&ph->rules->write);
-		printf ("%llu %d %s\n",  get_time() - ph->rules->start_time, ph->id, str);
-		pthread_mutex_unlock(&ph->rules->write);
-	}
+	printf ("%llu %d %s\n",  get_time() - ph->rules->start_time, ph->id, str);
 }
