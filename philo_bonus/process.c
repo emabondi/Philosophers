@@ -27,8 +27,19 @@ void	philo_process(t_philo *philo)
 {
 	while (1)
 	{
-		sem_wait(philo->rules->fork);
-		
+		sem_wait(philo->rules->forks);
+		print_msg(philo, "has taken a fork");
+		sem_wait(philo->rules->forks);
+		print_msg(philo, "has taken a fork");
+		print_msg(philo, "is eating");
+
+		philo->last_meal = get_time() - philo->rules->start_time;
+		ft_wait(philo->rules->time_eat);
+		sem_post(philo->rules->forks);
+		sem_post(philo->rules->forks);
+		print_msg(philo, "is sleeping");
+		ft_wait(philo->rules->time_sleep);
+		print_msg(philo, "is thinking");
 	}
 }
 
@@ -38,6 +49,7 @@ void	ft_philomaker(t_rules *rules)
 	t_philo	*philo;
 
 	philo = rules->philo;
+	
 	rules->start_time = get_time();
 	i = 0;
 	while (i < rules->n_ph)

@@ -22,5 +22,7 @@ long long	get_time(void)
 
 void	print_msg(t_philo *ph, char *str)
 {
+	sem_wait(ph->rules->write);
 	printf ("%llu %d %s\n",  get_time() - ph->rules->start_time, ph->id, str);
+	sem_post(ph->rules->write);
 }

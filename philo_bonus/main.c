@@ -12,6 +12,30 @@
 
 #include "philo_bonus.h"
 
+void	end(t_rules *rules)
+{
+	int	i;
+	int	ret;
+
+	i = 0;
+	while (i < rules->n_ph)
+	{
+		waitpid(-1, &ret, 0);
+		if (ret != 0)
+		{
+			i = -1;
+			while (++i < rules->n_ph)
+				kill(rules->philo[i].pid, SIGKILL);
+			break ;
+		}
+		i++;
+	}
+	sem_close(rules->forks);
+	sem_close(rules->write);
+	sem_unlink("/forks");
+	sem_unlink("/write");
+}
+
 void	ft_init(t_rules *rules, char *argv[])
 {
 	int	i;
@@ -20,8 +44,8 @@ void	ft_init(t_rules *rules, char *argv[])
 	rules->time_death = ft_atoi(argv[2]);
 	rules->time_eat = ft_atoi(argv[3]);
 	rules->time_sleep = ft_atoi(argv[4]);
-	rules->fork = sem_open("/forks", O_CREAT | O_EXCL, 0644, rules->n_ph);
-	rules->write = sem_open("/write", O_CREAT | O_EXCL, 0644, rules->n_ph);
+	rules->forks = sem_open("/forks", O_CREAT | O_EXCL, 0644, rules->n_ph);
+	rules->write = sem_open("/write", O_CREAT | O_EXCL, 0644, 1);
 	rules->philo = (t_philo *) malloc (sizeof(t_philo) * rules->n_ph);
 	i = 0;
 	while (i < rules->n_ph)
@@ -48,5 +72,6 @@ int	main(int argc, char *argv[])
 		rules.nb_must_eat = ft_atoi(argv[5]);
 	else
 		rules.nb_must_eat = -1;
-	ft_threadmaker(&rules);
+	ft_philomaker(&rules);
+	end(&rules);
 }

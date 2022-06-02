@@ -69,23 +69,3 @@ int	ft_atoi(const char *str)
 	}
 	return (res * s);
 }
-
-int	check_mutex(int	flag, t_philo *ph)
-{
-	int	temp;
-
-	temp = 0;
-	if (flag == 0)
-	{
-		pthread_mutex_lock(&ph->rules->finish_lock);
-		temp = ph->rules->finish_flag;
-		pthread_mutex_unlock(&ph->rules->finish_lock);
-	}
-	else if(flag == 1)
-	{
-		pthread_mutex_lock(&ph->eat_lock);
-		temp = ph->eat_flag;
-		pthread_mutex_unlock(&ph->eat_lock);
-	}
-	return (temp);
-}

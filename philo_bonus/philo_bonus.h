@@ -42,9 +42,17 @@ typedef struct s_rules
 	int				time_sleep;
 	int				nb_must_eat;
 	long long		start_time;
-	sem_t			*fork;
-	sem_t			write;
+	sem_t			*forks;
+	sem_t			*write;
 	t_philo			*philo;
 }				t_rules;
+
+int			ft_isnumeric(int argc, char *argv[]);
+void		ft_error(char *str);
+int			ft_atoi(const char *str);
+void		ft_philomaker(t_rules *rules);
+long long	get_time(void);
+void		print_msg(t_philo *ph, char *str);
+void		ft_exit(t_rules *rules);
 
 #endif
