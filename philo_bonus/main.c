@@ -11,6 +11,16 @@
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
+sem_t	*ft_semaphore(char *name, int value)
+{
+ 	sem_t	*sem;
+
+	sem = sem_open( name, O_CREAT | O_EXCL, 0644, value);
+	if (sem != SEM_FAILED)
+		return (sem);
+	sem_unlink(name);
+	return (sem_open(name, O_CREAT, S_IRUSR | S_IWUSR, value));
+}
 
 void	end(t_rules *rules)
 {
@@ -32,8 +42,10 @@ void	end(t_rules *rules)
 	}
 	sem_close(rules->forks);
 	sem_close(rules->write);
+	sem_close(rules->must_eat);
 	sem_unlink("/forks");
 	sem_unlink("/write");
+	sem_unlink("/must_eat");
 }
 
 void	ft_init(t_rules *rules, char *argv[])
@@ -44,8 +56,9 @@ void	ft_init(t_rules *rules, char *argv[])
 	rules->time_death = ft_atoi(argv[2]);
 	rules->time_eat = ft_atoi(argv[3]);
 	rules->time_sleep = ft_atoi(argv[4]);
-	rules->forks = sem_open("/forks", O_CREAT | O_EXCL, 0644, rules->n_ph);
-	rules->write = sem_open("/write", O_CREAT | O_EXCL, 0644, 1);
+	rules->forks = ft_semaphore("/forks", rules->n_ph);
+	rules->write = ft_semaphore("/write", 1);
+	rules->must_eat = ft_semaphore("/must_eat", rules->n_ph);
 	rules->philo = (t_philo *) malloc (sizeof(t_philo) * rules->n_ph);
 	i = 0;
 	while (i < rules->n_ph)
@@ -53,6 +66,7 @@ void	ft_init(t_rules *rules, char *argv[])
 		rules->philo[i].rules = rules;
 		rules->philo[i].id = i + 1;
 		rules->philo[i].n_eat = 0;
+		rules->philo[i].last_meal = 0;
 		i++;
 	}
 }
@@ -74,4 +88,5 @@ int	main(int argc, char *argv[])
 		rules.nb_must_eat = -1;
 	ft_philomaker(&rules);
 	end(&rules);
+	return (0);
 }

@@ -22,9 +22,29 @@ void	ft_wait(long long wait_time)
 		continue ;
 }
 
+void	*monitor(void *philo)
+{
+	t_philo	*ph;
+	int		temp;
+
+	ph = philo;
+	while (1)
+	{
+		temp = get_time() - ph->rules->start_time;
+		if (temp - ph->last_meal > ph->rules->time_death)
+		{
+			//printf("%lld\n", rules->philo[i].last_meal);
+			print_msg(ph->rules->philo, "died");
+			kill(ph->pid, SIGKILL);
+			return (NULL);
+		}
+		usleep(100);
+	}
+}
 
 void	philo_process(t_philo *philo)
 {
+	pthread_create(&philo->death, NULL, monitor, philo);
 	while (1)
 	{
 		sem_wait(philo->rules->forks);
@@ -32,7 +52,7 @@ void	philo_process(t_philo *philo)
 		sem_wait(philo->rules->forks);
 		print_msg(philo, "has taken a fork");
 		print_msg(philo, "is eating");
-
+		//printf ("time:%lld,  start_time:%lld", get_time(), philo->rules->start_time);
 		philo->last_meal = get_time() - philo->rules->start_time;
 		ft_wait(philo->rules->time_eat);
 		sem_post(philo->rules->forks);

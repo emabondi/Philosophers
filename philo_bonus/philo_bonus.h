@@ -31,6 +31,7 @@ typedef struct s_philo
 	int				n_eat;
 	pid_t			pid;
 	long long		last_meal;
+	pthread_t		death;
 	struct s_rules	*rules;
 }				t_philo;
 
@@ -44,6 +45,7 @@ typedef struct s_rules
 	long long		start_time;
 	sem_t			*forks;
 	sem_t			*write;
+	sem_t			*must_eat;
 	t_philo			*philo;
 }				t_rules;
 
