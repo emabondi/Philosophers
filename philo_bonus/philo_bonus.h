@@ -32,6 +32,7 @@ typedef struct s_philo
 	pid_t			pid;
 	long long		last_meal;
 	pthread_t		death;
+	pthread_t		finish_eat;
 	struct s_rules	*rules;
 }				t_philo;
 
@@ -42,10 +43,12 @@ typedef struct s_rules
 	int				time_eat;
 	int				time_sleep;
 	int				nb_must_eat;
+	int				dead;
 	long long		start_time;
 	sem_t			*forks;
 	sem_t			*write;
 	sem_t			*must_eat;
+	sem_t			*finish;
 	t_philo			*philo;
 }				t_rules;
 
@@ -56,5 +59,6 @@ void		ft_philomaker(t_rules *rules);
 long long	get_time(void);
 void		print_msg(t_philo *ph, char *str);
 void		ft_exit(t_rules *rules);
+void	philo_dead(t_philo *ph);
 
 #endif

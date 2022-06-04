@@ -12,6 +12,13 @@
 
 #include "philo_bonus.h"
 
+void	philo_dead(t_philo *ph)
+{
+	sem_wait(ph->rules->write);
+	printf ("%llu %d dead\n",  get_time() - ph->rules->start_time, ph->id);
+	ph->rules->dead = 1;
+}
+
 int	ft_isnumeric(int argc, char *argv[])
 {
 	int	i;

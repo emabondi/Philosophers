@@ -12,7 +12,7 @@
 
 NAME = philo_bonus
 SRCS = main.c utility.c process.c message.c
-FLAG = -Wall -Werror -Wextra -pthread -g
+FLAG = -Wall -Werror -Wextra -pthread
 
 $(NAME):
 		gcc $(FLAG) $(SRCS) -o $(NAME)
