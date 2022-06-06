@@ -31,7 +31,6 @@ typedef struct s_philo
 	int				n_eat;
 	pid_t			pid;
 	long long		last_meal;
-	pthread_t		death;
 	pthread_t		finish_eat;
 	struct s_rules	*rules;
 }				t_philo;
@@ -59,6 +58,6 @@ void		ft_philomaker(t_rules *rules);
 long long	get_time(void);
 void		print_msg(t_philo *ph, char *str);
 void		ft_exit(t_rules *rules);
-void	philo_dead(t_philo *ph);
+void		philo_dead(t_philo *ph);
 
 #endif

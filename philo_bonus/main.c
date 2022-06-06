@@ -32,13 +32,13 @@ void	end(t_rules *rules)
 	{
 		waitpid(-1, &ret, 0);
 		sem_wait(rules->finish);
-		//if (ret != 0)
-		//{
+		if (ret != 0)
+		{
 			i = -1;
 			while (++i < rules->n_ph)
 				kill(rules->philo[i].pid, SIGKILL);
 			break ;
-		//}
+		}
 		i++;
 	}
 	sem_close(rules->forks);
