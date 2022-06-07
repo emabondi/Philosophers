@@ -56,6 +56,8 @@ int			ft_atoi(const char *str);
 void		ft_threadmaker(t_rules *rules);
 void		print_msg(t_philo *ph, char *str);
 long long	get_time(void);
-int			check_mutex(int	flag, t_philo *ph);
+int			check_mutex(int flag, t_philo *ph);
+void		ft_wait(long long wait_time);
+void		ft_exit(t_rules *rules);
 
 #endif

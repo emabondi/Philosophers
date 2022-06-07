@@ -11,11 +11,12 @@
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
+
 sem_t	*ft_semaphore(char *name, int value)
 {
- 	sem_t	*sem;
+	sem_t	*sem;
 
-	sem = sem_open( name, O_CREAT | O_EXCL, 0644, value);
+	sem = sem_open(name, O_CREAT | O_EXCL, 0644, value);
 	if (sem != SEM_FAILED)
 		return (sem);
 	sem_unlink(name);
@@ -87,7 +88,6 @@ int	main(int argc, char *argv[])
 		return (0);
 	}
 	ft_init(&rules, argv);
-
 	if (argc == 6)
 		rules.nb_must_eat = ft_atoi(argv[5]);
 	else

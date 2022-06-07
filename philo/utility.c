@@ -29,18 +29,13 @@ int	ft_isnumeric(int argc, char *argv[])
 			return (0);
 		while (argv[i][j] != '\0')
 		{
-			if(argv[i][j] < '0' || argv[i][j] > '9')
+			if (argv[i][j] < '0' || argv[i][j] > '9')
 				return (0);
 			j++;
 		}
 		i++;
 	}
 	return (1);
-}
-
-void	ft_error(char *str)
-{
-	printf("%s error\n", str);
 }
 
 int	ft_atoi(const char *str)
@@ -70,7 +65,7 @@ int	ft_atoi(const char *str)
 	return (res * s);
 }
 
-int	check_mutex(int	flag, t_philo *ph)
+int	check_mutex(int flag, t_philo *ph)
 {
 	int	temp;
 
@@ -81,11 +76,44 @@ int	check_mutex(int	flag, t_philo *ph)
 		temp = ph->rules->finish_flag;
 		pthread_mutex_unlock(&ph->rules->finish_lock);
 	}
-	else if(flag == 1)
+	else if (flag == 1)
 	{
 		pthread_mutex_lock(&ph->eat_lock);
 		temp = ph->eat_flag;
 		pthread_mutex_unlock(&ph->eat_lock);
 	}
 	return (temp);
+}
+
+void	ft_wait(long long wait_time)
+{
+	long long	start_time;
+
+	start_time = get_time();
+	usleep(wait_time * 1000 - 20000);
+	while (get_time() < start_time + wait_time)
+		continue ;
+}
+
+void	ft_exit(t_rules *rules)
+{
+	int		i;
+	t_philo	*philo;
+
+	philo = rules->philo;
+	i = 0;
+	while (i < rules->n_ph)
+	{
+		pthread_join(philo[i].thread, NULL);
+		i++;
+	}
+	i = 0;
+	while (i < rules->n_ph)
+	{
+		pthread_mutex_destroy(&rules->forks[i]);
+		i++;
+	}
+	pthread_mutex_destroy(&rules->write);
+	free(rules->forks);
+	free(philo);
 }
