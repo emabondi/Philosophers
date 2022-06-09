@@ -16,7 +16,7 @@ void	philo_dead(t_philo *ph)
 {
 	sem_wait(ph->rules->write);
 	printf ("%llu %d died\n", get_time() - ph->rules->start_time, ph->id);
-	ph->rules->dead = 1;
+	sem_post(ph->rules->finish);
 }
 
 int	ft_isnumeric(int argc, char *argv[])

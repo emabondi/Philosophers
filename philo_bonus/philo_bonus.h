@@ -42,12 +42,12 @@ typedef struct s_rules
 	int				time_eat;
 	int				time_sleep;
 	int				nb_must_eat;
-	int				dead;
 	long long		start_time;
+	pthread_t		finish_eat;
 	sem_t			*forks;
 	sem_t			*write;
-	sem_t			*must_eat;
 	sem_t			*finish;
+	sem_t			*must_eat;
 	t_philo			*philo;
 }				t_rules;
 
